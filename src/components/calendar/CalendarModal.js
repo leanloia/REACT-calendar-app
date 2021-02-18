@@ -7,9 +7,9 @@ import Swal from "sweetalert2";
 import { useDispatch, useSelector } from "react-redux";
 import { uiCloseModal } from "../../actions/ui";
 import {
-  eventAddNew,
   eventClearActiveEvent,
-  eventUpdated,
+  eventStartAddNew,
+  eventStartUpdate,
 } from "../../actions/events";
 
 // settings del los modals (ver documentación npm de react-modal)
@@ -23,8 +23,9 @@ const customStyles = {
     transform: "translate(-50%, -50%)",
   },
 };
-
-Modal.setAppElement("#root");
+if (process.env.NODE_ENV !== "test") {
+  Modal.setAppElement("#root");
+}
 
 const now = moment().minute(0).seconds(0).add(1, "hours");
 const nowPlusHour = now.clone().add(1, "hours");
@@ -110,18 +111,9 @@ export const CalendarModal = () => {
     // TODO: sólo falta grabación en DB
 
     if (activeEvent) {
-      dispatch(eventUpdated(formValues));
+      dispatch(eventStartUpdate(formValues));
     } else {
-      dispatch(
-        eventAddNew({
-          ...formValues,
-          _id: new Date().getTime(),
-          user: {
-            _id: "1234",
-            name: "Leandro",
-          },
-        })
-      );
+      dispatch(eventStartAddNew(formValues));
     }
 
     setTitleValid(true);
@@ -137,6 +129,7 @@ export const CalendarModal = () => {
       className="modal"
       overlayClassName="modal-fondo"
       closeTimeoutMS={200}
+      ariaHideApp={!process.env.NODE_ENV === 'test'}
     >
       <h1> {activeEvent ? activeEvent.title : "Nuevo evento"} </h1>
       <hr />

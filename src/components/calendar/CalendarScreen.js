@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
@@ -13,6 +13,7 @@ import {
   eventClearActiveEvent,
   eventDeleted,
   eventSetActive,
+  eventStartLoading,
 } from "../../actions/events";
 
 import "react-big-calendar/lib/css/react-big-calendar.css";
@@ -26,12 +27,17 @@ const localizer = momentLocalizer(moment);
 export const CalendarScreen = () => {
   // traigo eventos del state
   const { events, activeEvent } = useSelector((state) => state.calendar);
+  const {uid} = useSelector(state => state.auth)
 
   // uso useState para llevar registro del estado de la última vista (y si no, utilizo 'month' por defecto)
   const [lastView, setLastView] = useState(
     localStorage.getItem("lastView") || "month"
   );
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(eventStartLoading());
+  }, [dispatch]);
 
   // método para el doble click en un evento
   const onDoubleClick = (e) => {
@@ -52,7 +58,7 @@ export const CalendarScreen = () => {
   // funcion getter del style, dada por BigCalendar
   const eventStyleGetter = (event, start, end, isSelected) => {
     const style = {
-      backgroundColor: "#367CF7",
+      backgroundColor: (uid === event.user._id) ? "#367CF7" : '#465660',
       borderRadius: "0px",
       opacity: 0.8,
       display: "block",
