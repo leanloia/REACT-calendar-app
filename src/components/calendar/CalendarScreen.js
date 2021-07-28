@@ -11,7 +11,7 @@ import { AddNewFab } from "../ui/AddNewFab";
 import { uiOpenModal } from "../../actions/ui";
 import {
   eventClearActiveEvent,
-  eventDeleted,
+  // eventDeleted,
   eventSetActive,
   eventStartLoading,
 } from "../../actions/events";

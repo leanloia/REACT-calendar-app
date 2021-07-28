@@ -11,7 +11,7 @@ export const eventStartAddNew = (event) => {
       const { uid, name } = getState().auth;
 
       if (body.ok) {
-        event.id = body.evento.id;
+        event.id = body.event.id;
         event.user = {
           _id: uid,
           name,
